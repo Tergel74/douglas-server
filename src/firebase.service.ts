@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 export class FirebaseService implements OnModuleInit {
   private firebaseApp: admin.app.App;
 
-  onModuleInit() {
+  onModuleInit(): Promise<void> {
     const firebaseConfig = {
       type: process.env.FIREBASE_TYPE,
       projectId: process.env.FIREBASE_PROJECT_ID,
@@ -18,6 +18,7 @@ export class FirebaseService implements OnModuleInit {
         credential: admin.credential.cert(firebaseConfig),
       });
     }
+    return;
   }
 
   getFirebaseApp() {
