@@ -28,20 +28,11 @@ export class AuthService implements OnModuleInit {
         displayName: `${data.firstname} ${data.lastname}`,
       });
 
-      const customToken = await this.generateToken(userRecord.uid);
-
-      res.cookie('customToken', customToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 3600000,
-      });
-
       return res.status(200).json({
-        message: 'Successfully signed up!',
         uid: userRecord.uid,
         email: userRecord.email,
         displayName: userRecord.displayName,
-        customToken: customToken,
+        photoUrl: userRecord.photoURL,
       });
     } catch (error) {
       console.error('Error creating new user:', error);
@@ -88,10 +79,7 @@ export class AuthService implements OnModuleInit {
         maxAge: 3600000,
       });
 
-      return res.status(200).json({
-        message: 'Successfully signed in!',
-        user,
-      });
+      return res.status(200).json(user);
     } catch (error) {
       console.error('Error verifying ID token:', error);
       return res.status(401).json({ message: 'Unauthorized' });
