@@ -89,26 +89,26 @@ export class AuthService implements OnModuleInit {
     }
   }
 
-  async refreshToken(req: Request, res: Response) {
-    const refreshToken = req.cookies['refreshToken'];
+  // async refreshToken(req: Request, res: Response) {
+  //   const refreshToken = req.cookies['refreshToken'];
 
-    if (!refreshToken) {
-      return res.status(400).json({ message: 'No refresh token provided' });
-    }
+  //   if (!refreshToken) {
+  //     return res.status(400).json({ message: 'No refresh token provided' });
+  //   }
 
-    try {
-      const newIdToken = await admin.auth().verifyIdToken(refreshToken, true);
+  //   try {
+  //     const newIdToken = await admin.auth().verifyIdToken(refreshToken, true);
 
-      res.cookie('idToken', newIdToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 3600000, // 1 hour
-      });
+  //     res.cookie('idToken', newIdToken, {
+  //       httpOnly: true,
+  //       secure: true,
+  //       maxAge: 3600000, // 1 hour
+  //     });
 
-      return res.status(200).json({ message: 'Token refreshed' });
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-      return res.status(401).json({ message: 'Token refresh failed' });
-    }
-  }
+  //     return res.status(200).json({ message: 'Token refreshed' });
+  //   } catch (error) {
+  //     console.error('Error refreshing token:', error);
+  //     return res.status(401).json({ message: 'Token refresh failed' });
+  //   }
+  // }
 }
