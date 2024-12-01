@@ -59,21 +59,14 @@ export class AuthService implements OnModuleInit {
   //     }
   //   }
 
-  async signIn(data: SignInDto, res: Response) {
+  async signIn(req: Request, res: Response) {
     try {
-      const decodedToken = await this.auth.verifyIdToken(data.idToken);
+      const idToken = req.cookies['idToken'];
+      const decodedToken = await this.auth.verifyIdToken(idToken);
       const uid = decodedToken.uid;
       const user = await this.auth.getUser(uid);
 
-      const customToken = await this.auth.createCustomToken(uid);
-
-      res.cookie('idToken', data.idToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 3600000,
-      });
-
-      res.cookie('customToken', customToken, {
+      res.cookie('idToken', idToken, {
         httpOnly: true,
         secure: true,
         maxAge: 3600000,
@@ -96,24 +89,26 @@ export class AuthService implements OnModuleInit {
     }
   }
 
-  async refreshToken(data: RefreshTokenDto, res: Response) {
-    const idToken = data.idToken;
+  async refreshToken(req: Request, res: Response) {
+    const refreshToken = req.cookies['refreshToken'];
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'No refresh token provided' });
+    }
 
     try {
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      const refreshedIdToken = await admin
-        .auth()
-        .createCustomToken(decodedToken.uid);
+      const newIdToken = await admin.auth().verifyIdToken(refreshToken, true);
 
-      res.cookie('idToken', refreshedIdToken, {
+      res.cookie('idToken', newIdToken, {
         httpOnly: true,
         secure: true,
         maxAge: 3600000, // 1 hour
       });
 
-      res.status(200).json({ message: 'Token refreshed' });
+      return res.status(200).json({ message: 'Token refreshed' });
     } catch (error) {
-      res.status(401).json({ message: 'Unauthorized' });
+      console.error('Error refreshing token:', error);
+      return res.status(401).json({ message: 'Token refresh failed' });
     }
   }
 }

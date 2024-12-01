@@ -15,15 +15,12 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
-    return this.authService.signIn(signInDto, res);
+  async signIn(@Req() req: Request, @Res() res: Response) {
+    return this.authService.signIn(req, res);
   }
 
   @Post('refresh-token')
-  async refreshToken(
-    @Body() refreshTokenDto: RefreshTokenDto,
-    @Res() res: Response,
-  ) {
-    return this.authService.refreshToken(refreshTokenDto, res);
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    return this.authService.refreshToken(req, res);
   }
 }
