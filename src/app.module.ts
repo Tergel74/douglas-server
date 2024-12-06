@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { FirebaseService } from './firebase.service';
 import { AuthModule } from './resources/auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './resources/auth/auth.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     AuthModule,
   ],
   controllers: [AppController],

@@ -59,9 +59,9 @@ export class AuthService implements OnModuleInit {
   //     }
   //   }
 
-  async signIn(req: Request, res: Response) {
+  async signIn(data: SignInDto, res: Response) {
     try {
-      const idToken = req.cookies['idToken'];
+      const idToken = data.idToken;
       const decodedToken = await this.auth.verifyIdToken(idToken);
       const uid = decodedToken.uid;
       const user = await this.auth.getUser(uid);

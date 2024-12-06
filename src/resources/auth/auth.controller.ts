@@ -15,8 +15,8 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  async signIn(@Req() req: Request, @Res() res: Response) {
-    return this.authService.signIn(req, res);
+  async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
+    return this.authService.signIn(signInDto, res);
   }
 
   // @Post('refresh-token')

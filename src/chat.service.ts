@@ -3,40 +3,13 @@ const openai = new OpenAI();
 
 export async function sendChat(
   system: string,
-  assistant: string[],
-  user: string[],
+  history: string,
+  question: string,
 ) {
-  let messages = [
-    {
-      role: 'system',
-      content: [
-        {
-          type: 'text',
-          text: system,
-        },
-      ],
-    },
-  ];
-  assistant.map((text, index) => {
-    messages.push({
-      role: 'assistant',
-      content: [
-        {
-          type: 'text',
-          text: text,
-        },
-      ],
-    });
-    messages.push({
-      role: 'user',
-      content: [
-        {
-          type: 'text',
-          text: user[index],
-        },
-      ],
-    });
-  });
+  let context = `
+    ${system}\n\n
+    Conversation History: ${history}
+    `;
 
   const response = await openai.chat.completions.create({
     model: 'gpt-4o',
@@ -46,10 +19,21 @@ export async function sendChat(
         content: [
           {
             type: 'text',
-            text: system,
+            text: context,
+          },
+        ],
+      },
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: question,
           },
         ],
       },
     ],
   });
+
+  return response.choices[0].message;
 }
