@@ -36,7 +36,8 @@ export class AuthService implements OnModuleInit {
       });
     } catch (error) {
       console.error('Error creating new user:', error);
-      throw new HttpException(error.errorInfo.message, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(error.errorInfo.message, HttpStatus.BAD_REQUEST);
+      return res.status(500).json({ message: 'Failed to create user' });
     }
   }
 
